@@ -9,7 +9,8 @@ const clearBtn  = document.querySelector('.clear-btn');
 
 // edit option
 let editFlag = false;
-let editId;
+let editId = '';
+let editElement;
 
 
 // ****** EVENT LISTENERS **********
@@ -54,7 +55,11 @@ function addItem(e){
     
 
     }else if(value && editFlag){
-
+        editElement.innerHTML = value;
+        setBackToDefault();
+        // Edit Local Storage
+        editLocalStorage(editId,value);
+        alertDisplay('Task Edited', 'success');
     }else{
         alertDisplay('Please add any Task', 'danger');
     };
@@ -92,6 +97,7 @@ function clearTasks() {
 // Delete Tasks
 function deleteTask(e) {
     const element = e.currentTarget.parentElement.parentElement;
+    const id = element.dataset.id;
     list.removeChild(element);
     if(list.children.length === 0) {
         container.classList.remove("show-container");
@@ -101,13 +107,27 @@ function deleteTask(e) {
 }
 
 // Edit Task
-function editTask() {
-
-}
+function editTask(e) {
+    const element = e.currentTarget.parentElement.parentElement;
+    editElement = e.currentTarget.parentElement.previousElementSibling;
+    todolist.value = editElement.textContent;
+    alertDisplay("Edit Task", 'success');
+    editId = element.dataset.id;
+    editFlag = true;
+    submitBtn.textContent = 'edit';
+};
 
 // ****** LOCAL STORAGE **********
 function setLocalStorage(id, value) {
     console.log("setting local storage");
+}
+
+function removeFromLocalStorage(id) {
+    
+}
+
+function editLocalStorage(id, value) {
+
 }
 
 // ****** SETUP ITEMS **********

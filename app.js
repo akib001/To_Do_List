@@ -50,16 +50,16 @@ function addItem(e){
     //show container
     container.classList.add('show-container');
     alertDisplay("Task Added", 'success');
-    setLocalStorage(id, value);
+    addLocalStorage(id, value);
     setBackToDefault();
     
 
     }else if(value && editFlag){
         editElement.innerHTML = value;
-        setBackToDefault();
-        // Edit Local Storage
-        editLocalStorage(editId,value);
         alertDisplay('Task Edited', 'success');
+        // Edit Local Storage
+        editLocalStorage(editId, value);
+        setBackToDefault();
     }else{
         alertDisplay('Please add any Task', 'danger');
     };
@@ -90,8 +90,9 @@ function clearTasks() {
         list.removeChild(task);
     });
     container.classList.remove('show-container');
-    setBackToDefault();
     alertDisplay('Cleared All Task', 'danger');
+    setBackToDefault();
+    localStorage.removeItem('list');
 }
 
 // Delete Tasks
@@ -102,6 +103,8 @@ function deleteTask(e) {
     if(list.children.length === 0) {
         container.classList.remove("show-container");
     }
+    // Remove From Local Storage
+    removeFromLocalStorage(id);
     alertDisplay("Task Deleted", 'danger');
     setBackToDefault(); 
 }
@@ -118,16 +121,37 @@ function editTask(e) {
 };
 
 // ****** LOCAL STORAGE **********
-function setLocalStorage(id, value) {
-    console.log("setting local storage");
+function addLocalStorage(id, value) {
+    const todotask = { id,value };
+    let items = getLocalStorage();
+    console.log(items);
+    items.push(todotask);
+    localStorage.setItem("list", JSON.stringify(items));
 }
 
 function removeFromLocalStorage(id) {
-    
+    let items = getLocalStorage();
+    items = items.filter(function (item) {
+        if (item.id !== id) {
+            return item;
+        }
+    });
+    localStorage.setItem("list", JSON.stringify(items));
 }
 
 function editLocalStorage(id, value) {
+    let items = getLocalStorage();
+    items = items.map(function (item){
+        if (item.id === id){
+            item.value = value;
+        }
+        return item;
+    });
+    localStorage.setItem("list", JSON.stringify(items));
+}
 
+function getLocalStorage() {
+    return localStorage.getItem('list')?JSON.parse(localStorage.getItem('list')):[];
 }
 
 // ****** SETUP ITEMS **********

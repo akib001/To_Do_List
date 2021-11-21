@@ -17,7 +17,10 @@ let editElement;
 const submit = submitBtn.addEventListener('click', addItem)
 const clearAllTask = clearBtn.addEventListener('click', clearTasks);
 // load Items
-windows.addEventListener('DOMcontentLoaded', setupItems);
+// if( document.readyState !== 'loading' ) {
+    setupItems();
+// }
+// window.addEventListener('DOMcontentLoaded', setupItems);
 
 // ****** FUNCTIONS **********
 function addItem(e){
@@ -138,6 +141,7 @@ function getLocalStorage() {
 // ****** SETUP ITEMS **********
 function setupItems() {
     let items = getLocalStorage();
+    console.log(items);
     if(items.length > 0) {
         items.forEach(function(item){
             createListItem(item.id, item.value);
